@@ -10,23 +10,31 @@ namespace Towers
 
 	public abstract class TowerBase: MonoBehaviour
 	{
-		public abstract targetingMode currentTargetingMode;
+		protected abstract targetingMode currentTargetingMode;
+		protected abstract attackType curentAttackType;
 
-		public abstract attackType curentAttackType;
+		protected abstract float attackRange;
+		protected abstract float attackSpeed;
+		protected abstract float baseDamage;
 
-		public abstract float attackRange;
+		protected abstract int upgradePath1;
+		protected abstract int upgradePath2;
 
-		public abstract float attackSpeed;
+		protected abstract SpriteRenderer renderer;
+		protected Sprite[] sprites = new Sprite[6, 6];
+		//25 sprites in total for the different combinations of upgrades. Needs to be assigned in the subclasses.
 
-		public abstract float baseDamage;
-
-		public abstract int upgradePath1;
-
-		public abstract int upgradePath2;
-
-		public abstract void basicAttack()
+		protected abstract void basicAttack()
 		{
 
+		}
+
+		protected void Upgrade(int path1, int path2) 
+		{
+			upgradePath1 += path1;
+			upgradePath2 += path2;
+
+			renderer.sprite = sprites[upgradePath1, upgradePath2];
 		}
 	}
 }

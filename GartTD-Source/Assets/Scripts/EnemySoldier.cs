@@ -4,14 +4,19 @@ using UnityEngine;
 
 namespace Enemies 
 {
-	public abstract class EnemyBase : MonoBehaviour
+	public abstract class EnemySoldier : EnemyBase
 	{
-		protected abstract float health;
-		protected abstract float speed;
+		protected override float health = 10f;
+		protected override float speed = 2f;
 
-		public abstract float deathAnimLength;
+		public override float deathAnimLength = 1f;
 
-		protected abstract Transform destination;
+		protected override Transform destination;
+
+		void Start() 
+		{
+			destination = Gameobject.FindWithTag("endPoint").transform;
+		}
 
 		protected abstract IEnumerator Die() 
 		{
