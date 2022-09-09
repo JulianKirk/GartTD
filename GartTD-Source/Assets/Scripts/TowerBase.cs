@@ -23,6 +23,7 @@ namespace Towers
 		protected abstract SpriteRenderer renderer;
 		protected Sprite[] sprites = new Sprite[6, 6];
 		//25 sprites in total for the different combinations of upgrades. Needs to be assigned in the subclasses.
+		//Possible change into using the animation system and triggers instead
 
 		protected abstract void basicAttack()
 		{
