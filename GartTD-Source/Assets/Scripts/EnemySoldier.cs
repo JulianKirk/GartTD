@@ -4,23 +4,29 @@ using UnityEngine;
 
 namespace Enemies 
 {
-	public abstract class EnemySoldier : EnemyBase
+	public class EnemySoldier : EnemyBase
 	{
-		protected override float maxHealth = 10f;
-		protected override float health;
-		protected override float speed = 2f;
+		void Start() {
+			maxHealth = 10f;
+			health = maxHealth;
 
-		protected override float incendiaryMultiplier = 2f;
-		protected override float physicalMultiplier = 1f;
-		protected override float electricMultiplier = 1.5f;
+			speed = 2f;
 
-		public override float deathAnimLength = 1f;
+			incendiaryMultiplier = 2f;
+			physicalMultiplier = 1f;
+			electricMultiplier = 1.5f;
 
-		protected abstract IEnumerator Die() 
+			deathAnimLength = 1f;
+
+			//Debug.Log(Mathf.Atan(1f) * Mathf.Rad2Deg); --- Testing the output of Atan and conversion to degrees
+			//StartPathfinding(destination);
+		}
+
+		protected override IEnumerator Die() 
 		{
 			//Play the corresponding animation
 
-			//yield return new WaitForSeconds(deathAnimLength);
+			yield return new WaitForSeconds(deathAnimLength);
 
 			//Destroy(gameObject);
 		}

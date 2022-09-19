@@ -1,26 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Enemies 
 {
 	public abstract class EnemyBase : MonoBehaviour
 	{
-		protected abstract float maxHealth;
-		protected abstract float health;
-		protected abstract float speed;
+		protected float maxHealth;
+		protected float health;
+		protected float speed;
 
 		protected bool burning;
-		protected bool stunned;
+		protected bool stunned; //An indicator for tower abilities to make use of
+		protected bool facingRight = false;
 
-		protected abstract float incendiaryMultiplier;
-		protected abstract float physicalMultiplier;
-		protected abstract float electricMultiplier;
+		protected float incendiaryMultiplier;
+		protected float physicalMultiplier;
+		protected float electricMultiplier;
 
-		public abstract float deathAnimLength;
-
-		protected Transform destination;
-		protected NavMeshAgent agent;
+		protected float deathAnimLength;
+		
+		protected Rigidbody2D rb;
+		public Transform destination;
 
 		protected void Start()
 		{
@@ -29,23 +31,45 @@ namespace Enemies
 			burning = false;
 			stunned = false;
 
-			destination = Gameobject.FindWithTag("endPoint").transform;
-			agent = gameObject.GetComponent<NavMeshAgent>();
-
-			agent.speed = speed;
-			agent.SetDestination(destination);
+			StartPathfinding(destination);
 		}
 
-		protected abstract IEnumerator Die() 
+		protected virtual void StartPathfinding(Transform dest) 
+		{
+			nodeAngle = Mathf.Atan((dest.position.y - transform.position.y)/(dest.position.x - transform.position.x)) * Mathf.Rad2Deg; //This finds the angle that next pathfinding position is from the player
+			rb.velocity = new Vector2(Mathf.Cos(nodeAngle) * speed, Mathf.Sin(nodeAngle) * speed ); // This should make it so the magnitude of velocity is the same no matter what directin the next destionation is
+
+			if ((Mathf.Cos(nodeAngle) * speed) < 0) 
+			{
+				if (facingRight) 
+				{
+					Flip();
+				}
+			} else 
+			{
+				if (!facingRight) 
+				{
+					Flip();
+				}	
+			}
+		}
+
+		protected void Flip() 
+		{
+			facingRight = !facingRight;
+			transform.localScale = transform.localScale * -1;
+		}
+
+		protected virtual IEnumerator Die()
 		{
 			//Play the corresponding animation
 
-			//yield return new WaitForSeconds(deathAnimLength);
+			yield return new WaitForSeconds(deathAnimLength);
 
-			//Destroy(gameObject);
+			Destroy(gameObject);
 		}
 
-		protected void TakeDamage(float damage, attackType type) 
+		public void TakeDamage(float damage, attackType type) 
 		{
 			//Possibly trigger an animation
 
@@ -70,7 +94,7 @@ namespace Enemies
 		{
 			stunned = true;
 
-			// Disable movement - possible through disabling the Navmesh component or changing the destination/speed
+			// Disable movement - possible through disabling the movement component or changing the destination/speed
 
 			// Play stun animation - I can set the trigger as the same name for all enemies
 
