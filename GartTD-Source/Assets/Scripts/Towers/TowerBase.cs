@@ -21,19 +21,30 @@ namespace Towers
 		protected int upgradePath1;
 		protected int upgradePath2;
 
-		protected SpriteRenderer renderer;
+		protected SpriteRenderer spriteRenderer;
 		protected Sprite[,] sprites = new Sprite[6, 6];
 		//25 sprites in total for the different combinations of upgrades. Needs to be assigned in the subclasses.
 		//Possible change into using the animation system and triggers instead
 
 		protected abstract void basicAttack();
 
+		protected void Start() 
+		{
+			spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+			Init();
+		}
+
+		protected virtual void Init() 
+		{
+
+		}
+
 		protected void Upgrade(int path1, int path2) 
 		{
 			upgradePath1 += path1;
 			upgradePath2 += path2;
 
-			renderer.sprite = sprites[upgradePath1, upgradePath2];
+			spriteRenderer.sprite = sprites[upgradePath1, upgradePath2];
 			//Possibly change animator too
 		}
 	}

@@ -13,7 +13,7 @@ namespace Enemies
 
 		protected bool burning;
 		protected bool stunned; //An indicator for tower abilities to make use of
-		protected bool facingRight = false;
+		protected bool facingRight;
 
 		protected float incendiaryMultiplier;
 		protected float physicalMultiplier;
@@ -22,22 +22,33 @@ namespace Enemies
 		protected float deathAnimLength;
 		
 		protected Rigidbody2D rb;
-		public Transform destination;
+		public Transform nextDestination;
 
-		protected void Start()
+		protected void Awake()
 		{
+			Init();
+
+			rb = GetComponent<Rigidbody2D>();
+
 			health = maxHealth;
 
 			burning = false;
 			stunned = false;
 
-			StartPathfinding(destination);
+			StartPathfinding(nextDestination);
 		}
 
-		protected virtual void StartPathfinding(Transform dest) 
+		protected virtual void Init() 
 		{
-			nodeAngle = Mathf.Atan((dest.position.y - transform.position.y)/(dest.position.x - transform.position.x)) * Mathf.Rad2Deg; //This finds the angle that next pathfinding position is from the player
-			rb.velocity = new Vector2(Mathf.Cos(nodeAngle) * speed, Mathf.Sin(nodeAngle) * speed ); // This should make it so the magnitude of velocity is the same no matter what directin the next destionation is
+
+		}
+
+		public void StartPathfinding(Transform dest) 
+		{
+			float nodeAngle = Mathf.Atan((dest.position.y - transform.position.y)/(dest.position.x - transform.position.x)) * Mathf.Rad2Deg; //This finds the angle that next pathfinding position is from the player
+			rb.velocity = new Vector2(Mathf.Cos(Mathf.Round(nodeAngle)) * speed, Mathf.Sin(Mathf.Round(nodeAngle)) * speed); // This should make it so the magnitude of velocity is the same no matter what direction the next destination is. The angle is rounded to the nearest because Unity's velocity only accepts up to 2 decimal places;
+
+			//^^^ BRUH THIS IS COMPLETELY BROKEN RN LOL FIX IT
 
 			if ((Mathf.Cos(nodeAngle) * speed) < 0) 
 			{
@@ -45,12 +56,12 @@ namespace Enemies
 				{
 					Flip();
 				}
-			} else 
+			} else if ((Mathf.Cos(nodeAngle) * speed) > 0) 
 			{
-				if (!facingRight) 
+				if(!facingRight) 
 				{
 					Flip();
-				}	
+				}
 			}
 		}
 

@@ -6,9 +6,9 @@ namespace Enemies
 {
 	public class EnemySoldier : EnemyBase
 	{
-		void Start() {
+		protected override void Init() 
+		{
 			maxHealth = 10f;
-			health = maxHealth;
 
 			speed = 2f;
 
@@ -18,8 +18,7 @@ namespace Enemies
 
 			deathAnimLength = 1f;
 
-			//Debug.Log(Mathf.Atan(1f) * Mathf.Rad2Deg); --- Testing the output of Atan and conversion to degrees
-			//StartPathfinding(destination);
+			facingRight = true;
 		}
 
 		protected override IEnumerator Die() 

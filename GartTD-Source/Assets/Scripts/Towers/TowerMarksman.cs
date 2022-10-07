@@ -8,7 +8,7 @@ namespace Towers
 	{
 		private float _remainingCoolDown;
 
-		void Start() 
+		protected override void Init() 
 		{
 			_remainingCoolDown = attackSpeed;
 
